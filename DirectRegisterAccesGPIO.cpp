@@ -1,14 +1,11 @@
 #include "DirectRegisterAccesGPIO.hpp"
-
 #define BCM2711_PERI_BASE 0xFE000000             //Only for RPi 4
 #define GPIO_BASE (BCM2711_PERI_BASE + 0x200000) //GPIO controller
 #define PAGE_SIZE (4 * 1024)
 #define BLOCK_SIZE (4 * 1024)
-
 int mem_fd;
 void *gpio_map;
 volatile unsigned *gpio; //I/O access
-
 // GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or SET_GPIO_ALT(x,y)
 #define INP_GPIO(g) *(gpio + ((g) / 10)) &= ~(7 << (((g) % 10) * 3)) //Input
 #define OUT_GPIO(g) *(gpio + ((g) / 10)) |= (1 << (((g) % 10) * 3))  //Output
