@@ -1,4 +1,4 @@
-#include "gpioDRA.hpp"
+#include "DirectRegisterAccesGPIO.hpp"
 
 #define BCM2711_PERI_BASE 0xFE000000             //Only for RPi 4
 #define GPIO_BASE (BCM2711_PERI_BASE + 0x200000) //GPIO controller
@@ -54,7 +54,7 @@ GPIODRA::~GPIODRA()
     }
 }
 
-void GPIODRA::setModeDRA(int _gpio, int direction) //0 = "IN", 1 = "OUT"
+void GPIODRA::setMode(int _gpio, int direction) //0 = "IN", 1 = "OUT"
 {
     if (direction == 0)
     {
@@ -67,7 +67,7 @@ void GPIODRA::setModeDRA(int _gpio, int direction) //0 = "IN", 1 = "OUT"
     }
 }
 
-void GPIODRA::writeDRA(int _gpio, int value)
+void GPIODRA::write(int _gpio, int value)
 {
     if (value == 0)
     {
@@ -79,7 +79,7 @@ void GPIODRA::writeDRA(int _gpio, int value)
     }
 }
 
-void GPIODRA::writeDRAString(int _gpio, string value)
+void GPIODRA::writeString(int _gpio, string value)
 {
     if (value == "0")
     {
@@ -91,7 +91,7 @@ void GPIODRA::writeDRAString(int _gpio, string value)
     }
 }
 
-int GPIODRA::readDRA(int _gpio)
+int GPIODRA::read(int _gpio)
 {
     if (GET_GPIO(_gpio))
     {
@@ -103,7 +103,7 @@ int GPIODRA::readDRA(int _gpio)
     }
 }
 
-string GPIODRA::readDRAString(int _gpio)
+string GPIODRA::readString(int _gpio)
 {
     if (GET_GPIO(_gpio))
     {
