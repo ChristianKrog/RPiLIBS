@@ -1,6 +1,6 @@
 #include "PWM.hpp"
 
-PWM::PWM()
+PWM::PWM(string period_ns, int dutycycle)
 {
     if (open("/sys/class/pwm/pwmchip0/pwm0", O_RDONLY) == -1) //Check if pwm0 is exported
     {
@@ -19,10 +19,8 @@ PWM::PWM()
     }
 
     /////Set period/////
-    char period[] = "200000"; // 1/5000Hz*1e-9
     fdPWM = open("/sys/class/pwm/pwmchip0/pwm0/period", O_WRONLY);
-    fdVal = write(fdPWM, period, strlen(period));
-
+    fdVal = write(fdPWM, period_ns, strlen(period_ns));
     if (fdVal == -1)
     {
         cout << "Error on writing to period. " << strerror(errno) << endl;
@@ -33,9 +31,12 @@ PWM::PWM()
     }
 
     /////Set Dutycycle/////
-    char dutyCycle[] = "100000"; //Period/2 = 50%;
+    int period = stoi(period_ns, nullptr, 10);
+    int dutyTemp = period/(100/dutycycle);
+    char dutyBuffer[10];
+    itoa(dutyTemp, dutyBuffer, 10);
     fdPWM = open("/sys/class/pwm/pwmchip0/pwm0/duty_cycle", O_WRONLY);
-    fdVal = write(fdPWM, dutyCycle, strlen(dutyCycle));
+    fdVal = write(fdPWM, dutyBuffer, strlen(dutyBuffer));
 
     if (fdVal == -1)
     {
@@ -123,4 +124,26 @@ void PWM::clockPWM0(bool enable)
             close(fdPWM);
         }
     }
+}
+
+
+char *PWM::itoa(const unsigned long int &myDecimal, char *myResult, const int &myBase)
+{
+    if (myBase < 2 || myBase > 16)
+    {
+        *myResult = 0;
+        return myResult;
+    }
+    char *out = myResult;
+    unsigned long int quotient = myDecimal;
+
+    do
+    {
+        *out = "0123456789abcdef"[quotient % myBase];
+        ++out;
+        quotient /= myBase;
+    } while (quotient);
+    reverse(myResult, out);
+    *out = 0;
+    return myResult;
 }

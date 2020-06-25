@@ -12,9 +12,10 @@ class PWM
 private:
     int fdPWM;
     int fdVal;
+    itoa(const unsigned long int &myDecimal, char *myResult, const int &myBase);
 
 public:
-    PWM();
+    PWM(string period_ns, int dutycycle);
     ~PWM();
     void clockPWM0(bool enable);
 };
